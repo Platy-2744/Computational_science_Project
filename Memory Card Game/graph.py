@@ -19,7 +19,7 @@ class Graph:
             self.c_data = pd.read_csv('C_data.csv')
             self.r_data = pd.read_csv('R_data.csv')
             self.new_c_data = {i:j for i,j in list(zip(self.n_card,list(np.zeros(20))))}
-            self.new_c_data[self.size_sol] = (1+self.correct/self.size_sol)/2
+            self.new_c_data[self.size_sol] = 2/(1+self.correct/self.size_sol)
             self.new_r_data = {i:j for i,j in list(zip(self.n_card,list(np.zeros(20))))}
             self.new_r_data[self.size_sol] = np.sqrt(3*np.pi*self.size_ans/2)
             
@@ -33,7 +33,7 @@ class Graph:
             self.c_data = pd.DataFrame(columns=self.n_card)
             self.r_data = pd.DataFrame(columns=self.n_card)
             self.new_c_data = {i:j for i,j in list(zip(self.n_card,list(np.zeros(20))))}
-            self.new_c_data[self.size_sol] = (1+self.correct/self.size_sol)/2
+            self.new_c_data[self.size_sol] = 2/(1+self.correct/self.size_sol)
             self.new_r_data = {i:j for i,j in list(zip(self.n_card,list(np.zeros(20))))}
             self.new_r_data[self.size_sol] = np.sqrt(3*np.pi*self.size_ans/2)
             
