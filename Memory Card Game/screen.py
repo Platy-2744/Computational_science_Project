@@ -5,7 +5,7 @@ from graph import Graph
 
 pygame.init()
 screen_size = pygame.display.get_desktop_sizes()[0]
-screen = pygame.display.set_mode(screen_size)
+screen = pygame.display.set_mode(screen_size,pygame.RESIZABLE)
 pygame.display.set_caption('memory game card ver.0.0.2')
 screen.fill([0,100,0])
 
