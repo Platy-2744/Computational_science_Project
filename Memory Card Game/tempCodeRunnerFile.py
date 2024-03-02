@@ -1,2 +1,1 @@
-#print(correct)
-        #print(select)
+screen_size[0]/2*3,screen_size[1]/2*3

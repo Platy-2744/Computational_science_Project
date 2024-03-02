@@ -1,16 +1,26 @@
 import pygame, sys
 from button import Button
 from card import Rand_card,Select_card
+from graph import Graph
 
 pygame.init()
 screen_size = pygame.display.get_desktop_sizes()[0]
 screen = pygame.display.set_mode(screen_size)
-pygame.display.set_caption('beta02')
+pygame.display.set_caption('memory game card ver.0.0.2')
 screen.fill([0,100,0])
+
 logo = pygame.image.load('images\pngegg_1.png')
 logo = pygame.transform.scale(logo,(180,162))
+
 logo_rect = logo.get_rect(center=(screen.get_rect().center))
+
 clock = pygame.time.Clock()
+
+BGM = pygame.mixer.Sound('sounds\By Your Side..mp3')
+BGM.set_volume(0.1)
+BGM.play(loops=-1)
+
+Graph = Graph()
 
 
 def get_font(size):
@@ -28,10 +38,30 @@ def Quit(event):
         pygame.quit()
         sys.exit()
 
+
+def graph():
+    screen.fill([0,100,0])
+    timer = 5
+    while True:
+        for event in pygame.event.get():
+            Quit(event)
+            if event.type == pygame.USEREVENT:
+                timer -= 1
+            Graph.show_graph(screen)
+            
+            if timer == 0:
+                remember_card()
+        pygame.display.update()
+
+
 def check(correct,select):
     screen.fill([0,100,0])
     timer = 3
     pygame.time.set_timer(pygame.USEREVENT, 1000)
+    Graph.addData(correct,select)
+    Graph.save_graph()
+    print(screen.get_size())
+    
     while True:
         if correct == select:
             for event in pygame.event.get():
@@ -77,6 +107,7 @@ def select_card(list_card):
                 correct_card, select_card = sel_c.get_correct_and_answer()
 
                 if select_button.check_of_interect(mouse_pos):
+                    print(screen.get_size())
                     check(correct_card,select_card)
            
         pygame.display.update()
@@ -95,6 +126,9 @@ def remember_card():
             button.update()
         quit_text = get_font(50).render('Quit',True,'black','white')
         screen.blit(quit_text,(0,screen.get_rect().bottom-50))
+
+        graph_btn = Button(screen,(300,screen.get_rect().bottom-50),'Show graph',get_font(50))
+        graph_btn.update()
         
         for event in pygame.event.get():
             Quit(event)
@@ -111,8 +145,8 @@ def remember_card():
                         cards = Rand_card(n,screen,screen_size[0],screen_size[1])
                         cards.update()
                         switch = True
-
-                
+                if graph_btn.check_of_interect(mouse_pos):
+                    graph()
 
             if timer == 0 and switch:
                 select_card(cards.get_list_of_rand_card())
@@ -128,20 +162,20 @@ def play():
         screen.blit(quit_text,(0,screen.get_rect().bottom-50))
         screen.blit(logo,logo_rect)
         
-        play_button = Button(screen,(screen.get_rect().centerx,screen.get_rect().centery+100),'Play',get_font(50),'black')
+        play_button = Button(screen,(screen.get_rect().centerx,screen.get_rect().centery+100),'Play',get_font(50))
         play_button.update()
         
-
         for event in pygame.event.get():
             Quit(event)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 quit_button(mouse_pos)
                 if play_button.check_of_interect(mouse_pos):
+                    print(screen.get_size())
                     remember_card()
                 
 
         pygame.display.update()
 
-
+print(screen.get_size())
 play()
