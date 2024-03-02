@@ -11,12 +11,11 @@ screen.fill([0,100,0])
 
 logo = pygame.image.load('images\pngegg_1.png')
 logo = pygame.transform.scale(logo,(180,162))
-
 logo_rect = logo.get_rect(center=(screen.get_rect().center))
 
 clock = pygame.time.Clock()
 
-BGM = pygame.mixer.Sound('sounds\By Your Side..mp3')
+BGM = pygame.mixer.Sound('sounds\IB_Memory.mp3')
 BGM.set_volume(0.1)
 BGM.play(loops=-1)
 
@@ -177,5 +176,4 @@ def play():
 
         pygame.display.update()
 
-print(screen.get_size())
 play()
