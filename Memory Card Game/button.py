@@ -1,7 +1,7 @@
 
 class Button:
-    def __init__(self,__,pos,text,font,color='black'):
-        self.__screen = __
+    def __init__(self,screen,pos,text,font,color='black'):
+        self.__screen = screen
         self.__pos_x = pos[0]
         self.__pos_y = pos[1]
         self.__font = font
