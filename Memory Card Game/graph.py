@@ -21,7 +21,7 @@ class Graph:
             self.__new_c_data = {i:j for i,j in list(zip(self.__n_card,list(np.zeros(20))))}
             self.__new_c_data[self.__size_sol] = self.__correct
             self.__new_r_data = {i:j for i,j in list(zip(self.__n_card,list(np.zeros(20))))}
-            self.__new_r_data[self.__size_sol] = 3*np.pi*self.__size_ans/2
+            self.__new_r_data[self.__size_sol] = 3*np.pi*self.__size_sol/2
             
             self.__c_data.loc[len(self.__c_data.index)] = self.__new_c_data.values()
             self.__r_data.loc[len(self.__r_data.index)] = self.__new_r_data.values()
@@ -35,7 +35,7 @@ class Graph:
             self.__new_c_data = {i:j for i,j in list(zip(self.__n_card,list(np.zeros(20))))}
             self.__new_c_data[self.__size_sol] = self.__correct
             self.__new_r_data = {i:j for i,j in list(zip(self.__n_card,list(np.zeros(20))))}
-            self.__new_r_data[self.__size_sol] = 3*np.pi*self.__size_ans/2
+            self.__new_r_data[self.__size_sol] = 3*np.pi*self.__size_sol/2
             
             self.__c_data.loc[len(self.__c_data.index)] = self.__new_c_data.values()
             self.__r_data.loc[len(self.__r_data.index)] = self.__new_r_data.values()
