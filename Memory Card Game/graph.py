@@ -49,9 +49,6 @@ class Graph:
         self.__avg_c = [np.sum(i)/np.size(i[i!=0]) for i in self.__c_data.to_numpy().transpose()]
         self.__avg_r = [np.sum(i)/np.size(i[i!=0]) for i in self.__r_data.to_numpy().transpose()]
         self.__x_value = [np.sqrt(k*i/j) for i,j,k in list(zip(self.__avg_c,self.__avg_r,self.__n_card))]
-        print(self.__avg_c)
-        print(self.__avg_r)
-        print(self.__x_value)
 
         plt.plot(self.__n_card,self.__x_value,'ro')
         plt.axhline(y = 0.46,color = 'b', linestyle = '-') 
