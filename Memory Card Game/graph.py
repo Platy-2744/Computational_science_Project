@@ -21,7 +21,7 @@ class Graph:
             self.__new_c_data = {i:j for i,j in list(zip(self.__n_card,list(np.zeros(20))))}
             self.__new_c_data[self.__size_sol] = self.__correct
             self.__new_r_data = {i:j for i,j in list(zip(self.__n_card,list(np.zeros(20))))}
-            self.__new_r_data[self.__size_sol] = 3*np.pi*self.__size_sol/2
+            self.__new_r_data[self.__size_sol] = 3*np.pi*self.__size_ans/2
             
             self.__c_data.loc[len(self.__c_data.index)] = self.__new_c_data.values()
             self.__r_data.loc[len(self.__r_data.index)] = self.__new_r_data.values()
@@ -35,7 +35,7 @@ class Graph:
             self.__new_c_data = {i:j for i,j in list(zip(self.__n_card,list(np.zeros(20))))}
             self.__new_c_data[self.__size_sol] = self.__correct
             self.__new_r_data = {i:j for i,j in list(zip(self.__n_card,list(np.zeros(20))))}
-            self.__new_r_data[self.__size_sol] = 3*np.pi*self.__size_sol/2
+            self.__new_r_data[self.__size_sol] = 3*np.pi*self.__size_ans/2
             
             self.__c_data.loc[len(self.__c_data.index)] = self.__new_c_data.values()
             self.__r_data.loc[len(self.__r_data.index)] = self.__new_r_data.values()
@@ -48,7 +48,7 @@ class Graph:
         self.__r_data = pd.read_csv('R_data.csv')
         self.__avg_c = [np.sum(i)/np.size(i[i!=0]) for i in self.__c_data.to_numpy().transpose()]
         self.__avg_r = [np.sum(i)/np.size(i[i!=0]) for i in self.__r_data.to_numpy().transpose()]
-        self.__x_value = [np.sqrt(k*i/j) for i,j,k in list(zip(self.__avg_c,self.__avg_r,self.__n_card))]
+        self.__x_value = [np.sqrt(i/j) for i,j in list(zip(self.__avg_c,self.__avg_r))]
 
         plt.plot(self.__n_card,self.__x_value,'ro')
         plt.axhline(y = 0.46,color = 'b', linestyle = '-') 
