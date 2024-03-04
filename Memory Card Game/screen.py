@@ -1,30 +1,37 @@
+#import library ที่ต้องใช้
 import pygame, sys
 from button import Button
 from card import Rand_card,Select_card
 from graph import Graph
 
+#ตั้งค่าหน้าจอที่ใช้ในการแสดงผล
 pygame.init()
 screen_size = pygame.display.get_desktop_sizes()[0]
 screen = pygame.display.set_mode(screen_size,pygame.RESIZABLE)
 pygame.display.set_caption('memory game card ver.0.0.2')
 screen.fill([0,100,0])
 
+#โหลดรูป logo มาเก็บไว้
 logo = pygame.image.load('images\pngegg_1.png')
 logo = pygame.transform.scale(logo,(180,162))
 logo_rect = logo.get_rect(center=(screen.get_rect().center))
 
+#เรียกใช้การทำงานเกี่ยวกับเวลา
 clock = pygame.time.Clock()
 
+#โหลดและตั้งค่าเพลงพื้นหลัง
 BGM = pygame.mixer.Sound('sounds\IB_Memory.mp3')
 BGM.set_volume(0.1)
 BGM.play(loops=-1)
 
+#ประการตัวแปรสำหรับเรียกใช้ฟังก์ชั่นของกราฟ
 Graph = Graph()
 
-
+#สร้างฟังก์ชั่นสำหรับเรียก font ให้ง่ายต่อการใช้
 def get_font(size):
     return pygame.font.SysFont(None,size)
 
+#ปุ่มสำหรับออกเกม เนื่องจากเกมเป็น full screen
 def quit_button(pos):
     quit_text = get_font(50).render('Quit',True,'black','white')
     screen.blit(quit_text,(0,screen.get_rect().bottom-50))
@@ -32,39 +39,45 @@ def quit_button(pos):
         pygame.quit()
         sys.exit()
 
+#สร้างไว้ให้เขียน quit สั้นลง เพราะได้เขียน quit ในทุกลูป
 def Quit(event):
     if event.type == pygame.QUIT:
         pygame.quit()
         sys.exit()
 
-
+#ฟังชั่นแสดงกราฟ
 def graph():
     screen.fill([0,100,0])
     timer = 5
     while True:
         for event in pygame.event.get():
             Quit(event)
+            #กำหนดให้เวลาลดลง 1 วินาที
             if event.type == pygame.USEREVENT:
                 timer -= 1
             Graph.show_graph(screen)
             
+            #เมื่อเวลานับถอยหลังเป็น 0 ให้กลับไปที่หน้าจำไพ่
             if timer == 0:
                 remember_card()
         pygame.display.update()
 
-
+#ลูปตรวจสอบความถูกต้องของไพ่
 def check(correct,select):
     screen.fill([0,100,0])
     timer = 3
     pygame.time.set_timer(pygame.USEREVENT, 1000)
+    
+    #เพิ่มข้อมูลใหม่ลงในไฟล์ csv และบันทึกกราฟใหม่
     Graph.addData(correct,select)
     Graph.save_graph()
-    print(screen.get_size())
     
     while True:
         if correct == select:
             for event in pygame.event.get():
                 Quit(event)
+
+                #ถ้าตอวถูกให้แสดง correct เป็นเวลา 3 วินาที แล้วกลับไปที่หน้าจำไพ่
                 if event.type == pygame.USEREVENT:
                     timer -= 1
                 correct_text = get_font(100).render('CORRECT',True,'black','white')
@@ -73,6 +86,7 @@ def check(correct,select):
                 if timer == 0:
                     remember_card()
         else:
+            #ถ้าตอบผิดให้แสดง wrong เป็นเวลา 3 วินาที แล้วกลับไปที่หน้าจำไพ่
             for event in pygame.event.get():
                 Quit(event)
                 if event.type == pygame.USEREVENT:
@@ -85,7 +99,7 @@ def check(correct,select):
 
         pygame.display.update()
     
-
+#ลูปเลือกไพ่ที่จะตอบ
 def select_card(list_card):
     screen.fill([0,100,0])
     sel_c = Select_card(screen,screen_size[0],screen_size[1],list_card)
@@ -93,39 +107,49 @@ def select_card(list_card):
         mouse_pos = pygame.mouse.get_pos()
         quit_text = get_font(50).render('Quit',True,'black','white')
         screen.blit(quit_text,(0,screen.get_rect().bottom-50))
+
         select_button = Button(screen,(100,screen.get_rect().centery+300),'Select',get_font(50),'black')
         select_button.update()
 
         for event in pygame.event.get():
             Quit(event)
+
+            #แสดงไพ่ทั้ง 52 ใบ
             sel_c.show_card()
 
+            #ตรวจสอบว่าเกิดการกดที่ไพ่นั้นๆหรือไม่
             if event.type == pygame.MOUSEBUTTONDOWN:
                 quit_button(mouse_pos)
                 sel_c.select_card(mouse_pos)
                 correct_card, select_card = sel_c.get_correct_and_answer()
 
+                #ถ้ามีการกดปุ่มให้ทำงานต่อใน ลูปตรวจสอบความถูกต้องของไพ่
                 if select_button.check_of_interect(mouse_pos):
                     print(screen.get_size())
                     check(correct_card,select_card)
            
         pygame.display.update()
 
+#ลูปสุ่มและจำไพ่
 def remember_card():
     screen.fill([0,100,0])
     timer = 3
     pygame.time.set_timer(pygame.USEREVENT, 1000)
+    #ชุดไพ่ที่กำหนด
     list_button = [3,5,8,10,13,16,18,21,23,26,29,31,34,36,39,42,44,47,49,52]
     switch = False
 
     while True:
         mouse_pos = pygame.mouse.get_pos()
+
+        #สร้าง dictionary ของปุ่มสำหรับการสุ่มไพ่ตามชุดไพ่ที่กำหนด
         rand_n_card = {i:Button(screen,(100,screen.get_rect().centery+300-list_button.index(i)*35),f'{i} cards',get_font(50),'black') for i in list_button}
         for button in rand_n_card.values():
             button.update()
         quit_text = get_font(50).render('Quit',True,'black','white')
         screen.blit(quit_text,(0,screen.get_rect().bottom-50))
 
+        #สร้างปุ่มแสดงกราฟ
         graph_btn = Button(screen,(300,screen.get_rect().bottom-50),'Show graph',get_font(50))
         graph_btn.update()
         
@@ -138,24 +162,30 @@ def remember_card():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 
                 quit_button(mouse_pos)
+
+                #ตรวจสอบว่าปุ่มไหนใน dictionary ที่ถูกกด แล้วส่งชุดไพ่ของปุ่มนั้นๆไปที่ฟังก์ชั่นสุ่มการ์ด
                 for n,button in rand_n_card.items():
                     if button.check_of_interect(mouse_pos):
                         timer = 3
                         cards = Rand_card(n,screen,screen_size[0],screen_size[1])
                         cards.update()
                         switch = True
+
+                #ถ้ากดปุ่มให้แสดงกราฟ
                 if graph_btn.check_of_interect(mouse_pos):
                     graph()
 
+            #เมื่อเวลาเป็น 0 และมีการกดปุ่มเลือกชุดไพ่ ให้ไปทำงานต่อที่ ลูปเลือกไพ่ที่จะตอบ
             if timer == 0 and switch:
                 select_card(cards.get_list_of_rand_card())
 
         pygame.display.update()
 
-
+#ลูปหน้าเริ่มเกม
 def play():
     
     while True:
+        #ตั้งค่าปุ่มเริ่มเกม
         mouse_pos = pygame.mouse.get_pos()
         quit_text = get_font(50).render('Quit',True,'black','white')
         screen.blit(quit_text,(0,screen.get_rect().bottom-50))
@@ -167,6 +197,7 @@ def play():
         for event in pygame.event.get():
             Quit(event)
 
+            #ถ้าปุ่มเริ่มเกมถูกกดให้ไปทำงานต่อที่ ลูปสุ่มและจำไพ่
             if event.type == pygame.MOUSEBUTTONDOWN:
                 quit_button(mouse_pos)
                 if play_button.check_of_interect(mouse_pos):
@@ -176,4 +207,5 @@ def play():
 
         pygame.display.update()
 
+#เริ่มเกม
 play()
